@@ -7,6 +7,7 @@ import (
 
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
+	"github.com/coredns/coredns/plugin/ready"
 
 	"github.com/mholt/caddy"
 )
@@ -19,6 +20,14 @@ func init() {
 }
 
 func setup(c *caddy.Controller) error {
+	ready.RegisterPlugin("erratic")
+	defer func() {
+		go func() {
+			time.Sleep(1 * time.Second)
+			ready.Signal("erratic")
+		}()
+	}()
+
 	e, err := parseErratic(c)
 	if err != nil {
 		return plugin.Error("erratic", err)
@@ -27,7 +36,6 @@ func setup(c *caddy.Controller) error {
 	dnsserver.GetConfig(c).AddPlugin(func(next plugin.Handler) plugin.Handler {
 		return e
 	})
-
 	return nil
 }
 
