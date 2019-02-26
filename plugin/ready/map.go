@@ -22,7 +22,7 @@ func (m *m) Store(key string) {
 
 func (m *m) Delete(key string) {
 	m.mu.Lock()
-	m.mu.Unlock()
+	defer m.mu.Unlock()
 	_, ok := m.m[key]
 	if !ok {
 		// possibly error, because this should not happen?
