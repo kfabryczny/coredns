@@ -39,7 +39,7 @@ ready.Signal("erratic")
 
 Run another ready endpoint on <http://localhost:8091/ready>.
 
-~~~ corefile
+~~~ txt
 . {
     ready localhost:8091
 }
